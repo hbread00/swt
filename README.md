@@ -19,6 +19,9 @@ Token structure
 Signature: Use [MD5](https://pkg.go.dev/crypto/md5) to digest data, use [AES](https://pkg.go.dev/crypto/aes) to encrypt data
 Use [base64](https://pkg.go.dev/encoding/base64) to encode Token.
 ## Install
+```
+go get github.com/hbread00/swt/v1.0.0
+```
 ## Usage
 Create a Swt instance.
 ```
