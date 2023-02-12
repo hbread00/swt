@@ -20,7 +20,7 @@ Signature: Use [MD5](https://pkg.go.dev/crypto/md5) to digest data, use [AES](ht
 Use [base64](https://pkg.go.dev/encoding/base64) to encode Token.
 ## Install
 ```
-go get github.com/hbread00/swt/v1.0.0
+go get github.com/hbread00/swt
 ```
 ## Usage
 Create a Swt instance.
