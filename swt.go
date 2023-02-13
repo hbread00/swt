@@ -5,7 +5,6 @@ import (
 	"crypto/cipher"
 	"crypto/md5"
 	"encoding/base64"
-	"encoding/binary"
 	"errors"
 )
 
@@ -40,14 +39,11 @@ func (s *Swt) ResetSwt(key []byte) error {
 
 // Enter data to create a Token
 func (s *Swt) MakeToken(data []byte) (string, error) {
-	if len(data) <= 0 || len(data) > int(^uint16(0)) {
+	if len(data) <= 0 {
 		return "", errors.New("invalid data length")
 	}
-	info := make([]byte, 2)
-	binary.BigEndian.PutUint16(info, uint16(len(data)))
-	info = append(info, data...)
-	sign := s.sign(info)
-	info = append(info, sign...)
+	sign := s.sign(data)
+	info := append(sign, data...)
 	result := base64.StdEncoding.EncodeToString(info)
 	return result, nil
 }
@@ -55,20 +51,16 @@ func (s *Swt) MakeToken(data []byte) (string, error) {
 // Verify the validity of the Token
 // Need to use the same Swt as for encryption
 func (s *Swt) VerifyToken(token string) error {
+	if len(token) < 24 {
+		return errors.New("invalid token length")
+	}
 	info, err := base64.StdEncoding.DecodeString(token)
 	if err != nil {
 		return err
 	}
-	if len(info) < 16+2 {
-		return errors.New("invalid token length")
-	}
-	data_len := binary.BigEndian.Uint16(info[0:2])
-	if len(info) != int(data_len)+2+16 {
-		return errors.New("invalid token structure")
-	}
-	data := info[:data_len+2]
+	data := info[16:]
 	sign := s.sign(data)
-	if !compare(sign, info[len(info)-16:]) {
+	if !compare(sign, info[:16]) {
 		return errors.New("invalid singature")
 	}
 	return nil
@@ -77,15 +69,14 @@ func (s *Swt) VerifyToken(token string) error {
 // Extracting data from Token
 // This operation will not fully verify the legitimacy, please parse the Token after verifying its validity
 func (s *Swt) ParseData(token string) ([]byte, error) {
+	if len(token) < 24 {
+		return nil, errors.New("invalid token length")
+	}
 	info, err := base64.StdEncoding.DecodeString(token)
 	if err != nil {
 		return nil, err
 	}
-	data_len := binary.BigEndian.Uint16(info[0:2])
-	if len(info) != int(data_len)+2+16 {
-		return nil, errors.New("invalid token structure")
-	}
-	data := info[2 : data_len+2]
+	data := info[16:]
 	return data, nil
 }
 

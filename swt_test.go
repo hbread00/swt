@@ -34,8 +34,6 @@ func TestMakeToken(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	var max_len_data [int(^uint16(0))]byte
-	var too_long_data [int(^uint16(0)) + 1]byte
 	cases := []struct {
 		name   string
 		input  []byte
@@ -56,22 +54,14 @@ func TestMakeToken(t *testing.T) {
 			[]byte("0"),
 			true,
 		},
-		{
-			"max length data",
-			(max_len_data)[:],
-			true,
-		},
-		{
-			"too long data",
-			too_long_data[:],
-			false,
-		},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			_, result := s.MakeToken(c.input)
-			if (result == nil) != c.target {
-				t.Errorf("input: %d | target: %t | result: %t", c.input, c.target, (result == nil))
+			tok, err := s.MakeToken(c.input)
+			fmt.Println("token:", tok)
+			result := err == nil
+			if result != c.target {
+				t.Errorf("input: %d | target: %t | result: %t", c.input, c.target, result)
 			}
 		})
 	}
@@ -89,32 +79,27 @@ func TestVerifyToken(t *testing.T) {
 	}{
 		{
 			"normal",
-			"AB50ZXN0IGRhdGEsIGlkOiB0ZXN0LCBleHA6IHRlc3QM4XH3+YqgnHNPxYGMcuPj",
+			"kGbG0EDVxB/pZhE6AU/3jDAxMjM0NTY3ODkwYWJjZGVm",
 			true,
 		},
 		{
 			"not base64",
-			"AB50ZXN0IGRhdGEsIGlkOiB0ZXN0LCBleHA6IHRlc3QM4XH3+YqgnHNPxYGMcuP",
+			"kGbG0EDVxB/pZhE6AU/3jDAxMjM0NTY3ODkwYWJjZGV",
 			false,
 		},
 		{
 			"wrong length",
-			"AB50ZXN0IGRhdGEsIGlkOiB0ZXN0LCBleHA6IHRlc3QM4XH3+YqgnHNPxYGM",
-			false,
-		},
-		{
-			"wrong data length",
-			"aB50ZXN0IGRhdGEsIGlkOiB0ZXN0LCBleHA6IHRlc3QM4XH3+YqgnHNPxYGM",
+			"kGbG0EDVxB/pZhE6AU/3",
 			false,
 		},
 		{
 			"wrong data",
-			"AB50ZXN0IGRhdgEsIGlkOiB0ZXN0LCBleHA6IHRlc3QM4XH3+YqgnHNPxYGMcuPj",
+			"kGbG0EDVxB/pZhE6AU/3jDAxMjM0NTY3ODkwYWJjZGVM",
 			false,
 		},
 		{
 			"wrong signature",
-			"AB50ZXN0IGRhdGEsIGlkOiB0ZXN0LCBleHA6IHRlc3QM4XH3+YqgnHNPxYgMcuPj",
+			"KGbG0EDVxB/pZhE6AU/3jDAxMjM0NTY3ODkwYWJjZGVm",
 			false,
 		},
 	}

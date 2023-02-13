@@ -8,12 +8,12 @@
 	- [Examples](#examples)
 	- [Licences](#licences)
 ## Background
-While developing my personal blog, I encountered some scenarios that required authentication, so I used JWT, but for my small projects, JWT always produced long Token strings, so I designed SWT to create shorter Token strings.
+While developing my personal blog, I encountered some scenarios that required authentication. At first I used JWT, but the JWT Token string was too long for my small project, so I designed SWT to create a shorter Token string.
 
 Token structure
 ```
-|--- 16 bits ---|--------|-- 128 bits --|
-|- data length -|- data -|- sinagature -|
+|-- 128 bits --|--------|
+|- sinagature -|- data -|
 ```
 
 Signature: Use [MD5](https://pkg.go.dev/crypto/md5) to digest data, use [AES](https://pkg.go.dev/crypto/aes) to encrypt data
