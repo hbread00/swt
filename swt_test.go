@@ -7,7 +7,11 @@ import (
 )
 
 func TestQucikStart(t *testing.T) {
-	s, err := NewSwt([]byte("0123456789abcdef"))
+	s, err := NewSwt([]byte("0000000000000000"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = s.ResetSwt([]byte("0123456789abcdef"))
 	if err != nil {
 		t.Fatal(err)
 	}
