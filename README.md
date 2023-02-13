@@ -1,5 +1,5 @@
 # SWT
-**Simple Web Token** inspired by [JWT](https://jwt.io/introduction), it can be used to validate data.
+**Simple Web Token** inspired by [JWT](https://jwt.io/introduction), it can be used to validate data. 
 
 - [SWT](#swt)
 	- [Background](#background)
@@ -8,16 +8,16 @@
 	- [Examples](#examples)
 	- [Licences](#licences)
 ## Background
-While developing my personal blog, I encountered some scenarios that required authentication. At first I used JWT, but the JWT Token string was too long for my small project, so I designed SWT to create a shorter Token string.
+While developing my personal blog, I encountered some scenarios that required authentication. At first I used JWT, but the JWT Token string was too long for my small project, so I designed SWT to create a shorter Token string. 
 
 Token structure
 ```
 |-- 128 bits --|--------|
 |- sinagature -|- data -|
 ```
-
-Signature: Use [MD5](https://pkg.go.dev/crypto/md5) to digest data, use [AES](https://pkg.go.dev/crypto/aes) to encrypt data
-Use [base64](https://pkg.go.dev/encoding/base64) to encode Token.
+Use [MD5](https://pkg.go.dev/crypto/md5) to digest data. 
+Use [AES](https://pkg.go.dev/crypto/aes) to encrypt summary. 
+Use [Base64](https://pkg.go.dev/encoding/base64) to encode Token. 
 ## Install
 ```
 go get github.com/hbread00/swt
