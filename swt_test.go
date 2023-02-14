@@ -83,27 +83,27 @@ func TestVerifyToken(t *testing.T) {
 	}{
 		{
 			"normal",
-			"kGbG0EDVxB/pZhE6AU/3jDAxMjM0NTY3ODkwYWJjZGVm",
+			"D2cil/7L83zTu90gMYKb3XNpZDp0ZXN0",
 			true,
 		},
 		{
 			"not base64",
-			"kGbG0EDVxB/pZhE6AU/3jDAxMjM0NTY3ODkwYWJjZGV",
+			"D2cil/7L83zTu90gMYKb3XNpZDp0ZXN",
 			false,
 		},
 		{
 			"wrong length",
-			"kGbG0EDVxB/pZhE6AU/3",
+			"D2cil/7L83zTu90gMY",
 			false,
 		},
 		{
 			"wrong data",
-			"kGbG0EDVxB/pZhE6AU/3jDAxMjM0NTY3ODkwYWJjZGVM",
+			"D2cil/7L83zTu90gMYKb3XNpZDp0ZXn0",
 			false,
 		},
 		{
 			"wrong signature",
-			"KGbG0EDVxB/pZhE6AU/3jDAxMjM0NTY3ODkwYWJjZGVm",
+			"d2cil/7L83zTu90gMYKb3XNpZDp0ZXN0",
 			false,
 		},
 	}
