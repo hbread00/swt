@@ -8,7 +8,7 @@
 	- [Examples](#examples)
 	- [Licences](#licences)
 ## Background
-While developing my personal blog, I encountered some scenarios that required authentication. At first I used JWT, but the JWT Token string was too long for my small project, so I designed SWT to create a shorter Token string. 
+I encountered some scenarios that required authentication. At first I used JWT, but the JWT Token string was too long for my small project, so I designed SWT to create a shorter Token string. 
 
 Token structure
 ```
