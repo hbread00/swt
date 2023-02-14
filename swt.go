@@ -3,7 +3,8 @@ package swt
 import (
 	"crypto/aes"
 	"crypto/cipher"
-	"crypto/md5"
+	"crypto/sha256"
+	"crypto/sha512"
 	"encoding/base64"
 	"errors"
 )
@@ -11,6 +12,7 @@ import (
 // Swt contains the encryption algorithm used
 type Swt struct {
 	encrypter cipher.Block
+	salt      []byte
 }
 
 // Return a new Swt instance, encrypted key is required
@@ -20,8 +22,10 @@ func NewSwt(key []byte) (*Swt, error) {
 	if err != nil {
 		return nil, err
 	}
+	salt := sha512.Sum512_256(key)
 	result := &Swt{
 		encrypter: aes_encrypter,
+		salt:      salt[8:24],
 	}
 	return result, nil
 }
@@ -33,7 +37,9 @@ func (s *Swt) ResetSwt(key []byte) error {
 	if err != nil {
 		return err
 	}
+	salt := sha512.Sum512_256(key)
 	s.encrypter = aes_encrypter
+	s.salt = salt[8:24]
 	return nil
 }
 
@@ -82,9 +88,10 @@ func (s *Swt) ParseData(token string) ([]byte, error) {
 
 // Sign the data
 func (s *Swt) sign(data []byte) []byte {
-	hash := md5.Sum(data)
+	info := append(data, s.salt...)
+	hash := sha256.Sum256(info)
 	result := make([]byte, 16)
-	s.encrypter.Encrypt(result, hash[:])
+	s.encrypter.Encrypt(result, hash[8:24])
 	return result
 }
 

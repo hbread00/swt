@@ -15,7 +15,7 @@ Token structure
 |-- 128 bits --|--------|
 |- sinagature -|- data -|
 ```
-Use [MD5](https://pkg.go.dev/crypto/md5) to digest data. 
+Use [SHA256](https://pkg.go.dev/crypto/sha256) to digest data. 
 Use [AES](https://pkg.go.dev/crypto/aes) to encrypt summary. 
 Use [Base64](https://pkg.go.dev/encoding/base64) to encode Token. 
 ## Install
