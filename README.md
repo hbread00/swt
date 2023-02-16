@@ -61,7 +61,7 @@ if err != nil {
 ## Examples
 ```go
 func main() {
-    s, err := NewSwt([]byte("0000000000000000"))
+	s, err := NewSwt([]byte("0000000000000000"))
 	if err != nil {
 		panic(err)
 	}
