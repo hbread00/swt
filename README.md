@@ -25,7 +25,7 @@ go get github.com/hbread00/swt
 ## Usage
 Create a Swt instance. 
 ```go
-s, err := NewSwt([]byte("0123456789abcdef"))
+s, err := NewSwt([]byte("password"))
 if err != nil {
 	panic(err)
 }
@@ -53,7 +53,7 @@ if err != nil {
 ```
 Modify the key, no key is 100% infallible, the most secure key is the frequently modified key. 
 ```go
-err = s.ResetSwt([]byte("0123456789abcdef"))
+err = s.ResetSwt([]byte("password"))
 if err != nil {
 	t.Fatal(err)
 }
@@ -61,11 +61,11 @@ if err != nil {
 ## Examples
 ```go
 func main() {
-	s, err := NewSwt([]byte("0000000000000000"))
+	s, err := NewSwt([]byte("0"))
 	if err != nil {
 		panic(err)
 	}
-	err = s.ResetSwt([]byte("0123456789abcdef"))
+	err = s.ResetSwt([]byte("password"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -87,6 +87,11 @@ func main() {
 	fmt.Println("data from token:", string(token_data))
 }
 ```
-
+Output:
+```
+original data: sid: 4396, exp: 2200
+token: AoIp4UOQl3M6USR8S2S5lnNpZDogNDM5NiwgZXhwOiAyMjAw
+data from token: sid: 4396, exp: 2200
+```
 ## Licences
 [MIT](LICENSE)

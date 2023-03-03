@@ -16,30 +16,28 @@ type Swt struct {
 }
 
 // Return a new Swt instance, encrypted key is required
-// Since Swt uses Advanced Encryption Standard, the key length should conform to the AES specification(128/192/256bits)
 func NewSwt(key []byte) (*Swt, error) {
-	aes_encrypter, err := aes.NewCipher(key)
+	hash := sha512.Sum512(key)
+	aes_encrypter, err := aes.NewCipher((*[32]byte)(hash[:])[:])
 	if err != nil {
 		return nil, err
 	}
-	salt := sha512.Sum512_256(key)
 	result := &Swt{
 		encrypter: aes_encrypter,
-		salt:      salt[8:24],
+		salt:      hash[:],
 	}
 	return result, nil
 }
 
 // Reset a Swt instance, encrypted key is required
-// The key length should conform to the AES specification(128/192/256bits)
 func (s *Swt) ResetSwt(key []byte) error {
-	aes_encrypter, err := aes.NewCipher(key)
+	hash := sha512.Sum512(key)
+	aes_encrypter, err := aes.NewCipher((*[32]byte)(hash[:])[:])
 	if err != nil {
 		return err
 	}
-	salt := sha512.Sum512_256(key)
 	s.encrypter = aes_encrypter
-	s.salt = salt[8:24]
+	s.salt = hash[:]
 	return nil
 }
 
@@ -91,7 +89,7 @@ func (s *Swt) sign(data []byte) []byte {
 	info := append(data, s.salt...)
 	hash := sha256.Sum256(info)
 	result := make([]byte, 16)
-	s.encrypter.Encrypt(result, hash[8:24])
+	s.encrypter.Encrypt(result, (*[16]byte)(hash[:])[:])
 	return result
 }
 
