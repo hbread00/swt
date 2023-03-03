@@ -7,11 +7,11 @@ import (
 )
 
 func TestQucikStart(t *testing.T) {
-	s, err := NewSwt([]byte("0000000000000000"))
+	s, err := NewSwt([]byte("0"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = s.ResetSwt([]byte("0123456789abcdef"))
+	err = s.ResetSwt([]byte("password"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -34,7 +34,7 @@ func TestQucikStart(t *testing.T) {
 }
 
 func TestMakeToken(t *testing.T) {
-	s, err := NewSwt([]byte("0123456789abcdef"))
+	s, err := NewSwt([]byte("password"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -72,7 +72,7 @@ func TestMakeToken(t *testing.T) {
 }
 
 func TestVerifyToken(t *testing.T) {
-	s, err := NewSwt([]byte("0123456789abcdef"))
+	s, err := NewSwt([]byte("password"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -83,27 +83,27 @@ func TestVerifyToken(t *testing.T) {
 	}{
 		{
 			"normal",
-			"D2cil/7L83zTu90gMYKb3XNpZDp0ZXN0",
+			"SSJZWRXt0m/4dqtnlYWFYHRlc3RkYXRh",
 			true,
 		},
 		{
 			"not base64",
-			"D2cil/7L83zTu90gMYKb3XNpZDp0ZXN",
+			"SSJZWRXt0m/4dqtnlYWFYHRlc3RkYXR",
 			false,
 		},
 		{
 			"wrong length",
-			"D2cil/7L83zTu90gMY",
+			"SSJZWRXt0m/4dqtnlYWF",
 			false,
 		},
 		{
 			"wrong data",
-			"D2cil/7L83zTu90gMYKb3XNpZDp0ZXn0",
+			"SSJZWRXt0m/4dqtnlYWFYHRlc3RkYXRH",
 			false,
 		},
 		{
 			"wrong signature",
-			"d2cil/7L83zTu90gMYKb3XNpZDp0ZXN0",
+			"sSJZWRXt0m/4dqtnlYWFYHRlc3RkYXRh",
 			false,
 		},
 	}
@@ -119,7 +119,7 @@ func TestVerifyToken(t *testing.T) {
 }
 
 func TestParseData(t *testing.T) {
-	s, err := NewSwt([]byte("0123456789abcdef"))
+	s, err := NewSwt([]byte("password"))
 	if err != nil {
 		t.Fatal(err)
 	}
