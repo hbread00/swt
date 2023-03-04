@@ -63,6 +63,7 @@ func TestMakeToken(t *testing.T) {
 		t.Run(c.name, func(t *testing.T) {
 			tok, err := s.MakeToken(c.input)
 			fmt.Println("token:", tok)
+			fmt.Println("error:", err)
 			result := err == nil
 			if result != c.target {
 				t.Errorf("input: %d | target: %t | result: %t", c.input, c.target, result)
@@ -83,27 +84,22 @@ func TestVerifyToken(t *testing.T) {
 	}{
 		{
 			"normal",
-			"SSJZWRXt0m/4dqtnlYWFYHRlc3RkYXRh",
+			"SSJZWRXt0m_4dqtnlYWFYHRlc3RkYXRh",
 			true,
 		},
 		{
-			"not base64",
-			"SSJZWRXt0m/4dqtnlYWFYHRlc3RkYXR",
-			false,
-		},
-		{
 			"wrong length",
-			"SSJZWRXt0m/4dqtnlYWF",
+			"SSJZWRXt0m_4dqtnlYWFYHR",
 			false,
 		},
 		{
 			"wrong data",
-			"SSJZWRXt0m/4dqtnlYWFYHRlc3RkYXRH",
+			"SSJZWRXt0m_4dqtnlYWFYHRlc3RkYXRH",
 			false,
 		},
 		{
 			"wrong signature",
-			"sSJZWRXt0m/4dqtnlYWFYHRlc3RkYXRh",
+			"sSJZWRXt0m_4dqtnlYWFYHRlc3RkYXRh",
 			false,
 		},
 	}
