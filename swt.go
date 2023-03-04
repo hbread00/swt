@@ -9,6 +9,8 @@ import (
 	"errors"
 )
 
+var b64Encode = base64.RawURLEncoding
+
 // Swt contains the encryption algorithm used
 type Swt struct {
 	encrypter cipher.Block
@@ -48,7 +50,7 @@ func (s *Swt) MakeToken(data []byte) (string, error) {
 	}
 	sign := s.sign(data)
 	info := append(sign, data...)
-	result := base64.StdEncoding.EncodeToString(info)
+	result := b64Encode.EncodeToString(info)
 	return result, nil
 }
 
@@ -58,14 +60,14 @@ func (s *Swt) VerifyToken(token string) error {
 	if len(token) < 24 {
 		return errors.New("invalid token length")
 	}
-	info, err := base64.StdEncoding.DecodeString(token)
+	info, err := b64Encode.DecodeString(token)
 	if err != nil {
 		return err
 	}
 	data := info[16:]
 	sign := s.sign(data)
 	if !compare(sign, info[:16]) {
-		return errors.New("invalid singature")
+		return errors.New("mismatch singature")
 	}
 	return nil
 }
@@ -76,7 +78,7 @@ func (s *Swt) ParseData(token string) ([]byte, error) {
 	if len(token) < 24 {
 		return nil, errors.New("invalid token length")
 	}
-	info, err := base64.StdEncoding.DecodeString(token)
+	info, err := b64Encode.DecodeString(token)
 	if err != nil {
 		return nil, err
 	}
