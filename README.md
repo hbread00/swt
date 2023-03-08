@@ -12,11 +12,10 @@ I encountered some scenarios that required authentication. At first I used JWT, 
 
 Token structure
 ```
-|-- 128 bits --|--------|
+|-- 256 bits --|--------|
 |- sinagature -|- data -|
 ```
-Use [SHA256](https://pkg.go.dev/crypto/sha256) to digest data. 
-Use [AES](https://pkg.go.dev/crypto/aes) to encrypt summary. 
+Use [HMAC](https://pkg.go.dev/crypto/hmac)-[SHA256](https://pkg.go.dev/crypto/sha256) to digest and sign data.  
 Use [Base64](https://pkg.go.dev/encoding/base64) to encode Token. 
 ## Install
 ```
@@ -25,10 +24,7 @@ go get github.com/hbread00/swt
 ## Usage
 Create a Swt instance. 
 ```go
-s, err := NewSwt([]byte("password"))
-if err != nil {
-	panic(err)
-}
+s := NewSwt([]byte("password"))
 ```
 Create a Token for your data. 
 ```go
@@ -53,22 +49,13 @@ if err != nil {
 ```
 Modify the key, no key is 100% infallible, the most secure key is the frequently modified key. 
 ```go
-err = s.ResetSwt([]byte("password"))
-if err != nil {
-	t.Fatal(err)
-}
+s.ResetSwt([]byte("password"))
 ```
 ## Examples
 ```go
 func main() {
-	s, err := NewSwt([]byte("0"))
-	if err != nil {
-		panic(err)
-	}
-	err = s.ResetSwt([]byte("password"))
-	if err != nil {
-		t.Fatal(err)
-	}
+	s := NewSwt([]byte("0"))
+	s.ResetSwt([]byte("password"))
 	data := []byte("sid: 4396, exp: 2200")
 	fmt.Println("original data:", string(data))
 	token, err := s.MakeToken(data)
@@ -90,7 +77,7 @@ func main() {
 Output:
 ```
 original data: sid: 4396, exp: 2200
-token: AoIp4UOQl3M6USR8S2S5lnNpZDogNDM5NiwgZXhwOiAyMjAw
+token: MSbLkwhP6fOvVRQEEIRfLO0DLU-ELM0uTJI3Ze7aEYNzaWQ6IDQzOTYsIGV4cDogMjIwMA
 data from token: sid: 4396, exp: 2200
 ```
 ## Licences

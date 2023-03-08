@@ -7,14 +7,8 @@ import (
 )
 
 func TestQucikStart(t *testing.T) {
-	s, err := NewSwt([]byte("0"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	err = s.ResetSwt([]byte("password"))
-	if err != nil {
-		t.Fatal(err)
-	}
+	s := NewSwt([]byte("0"))
+	s.ResetSwt([]byte("password"))
 	data := []byte("sid: 4396, exp: 2200")
 	fmt.Println("original data:", string(data))
 	token, err := s.MakeToken(data)
@@ -34,10 +28,7 @@ func TestQucikStart(t *testing.T) {
 }
 
 func TestMakeToken(t *testing.T) {
-	s, err := NewSwt([]byte("password"))
-	if err != nil {
-		t.Fatal(err)
-	}
+	s := NewSwt([]byte("password"))
 	cases := []struct {
 		name   string
 		input  []byte
@@ -73,10 +64,7 @@ func TestMakeToken(t *testing.T) {
 }
 
 func TestVerifyToken(t *testing.T) {
-	s, err := NewSwt([]byte("password"))
-	if err != nil {
-		t.Fatal(err)
-	}
+	s := NewSwt([]byte("password"))
 	cases := []struct {
 		name   string
 		input  string
@@ -84,22 +72,22 @@ func TestVerifyToken(t *testing.T) {
 	}{
 		{
 			"normal",
-			"SSJZWRXt0m_4dqtnlYWFYHRlc3RkYXRh",
+			"IBtsgjcJwaqe5PnZ_xltz-ghc8bXZa94K2ZuZ2huHaYw",
 			true,
 		},
 		{
 			"wrong length",
-			"SSJZWRXt0m_4dqtnlYWFYHR",
+			"IBtsgjcJwaqe5PnZ_xltz-ghc8bXZa94K2ZuZ2huHaY",
 			false,
 		},
 		{
 			"wrong data",
-			"SSJZWRXt0m_4dqtnlYWFYHRlc3RkYXRH",
+			"IBtsgjcJwaqe5PnZ_xltz-ghc8bXZa94K2ZuZ2huHaYW",
 			false,
 		},
 		{
 			"wrong signature",
-			"sSJZWRXt0m_4dqtnlYWFYHRlc3RkYXRh",
+			"gaEl5DO5MpF186W-OlUlrkKAP-4f1ZcaNCNij9CNnOUw",
 			false,
 		},
 	}
@@ -112,16 +100,21 @@ func TestVerifyToken(t *testing.T) {
 			}
 		})
 	}
+	t.Run("different key", func(t *testing.T) {
+		s.ResetSwt([]byte("pwd"))
+		result := s.VerifyToken("IBtsgjcJwaqe5PnZ_xltz-ghc8bXZa94K2ZuZ2huHaYw")
+		fmt.Println("err:", result)
+		if (result == nil) != false {
+			t.Errorf("input: %s | target: %t | result: %t", "IBtsgjcJwaqe5PnZ_xltz-ghc8bXZa94K2ZuZ2huHaYw", false, (result == nil))
+		}
+	})
 }
 
 func TestParseData(t *testing.T) {
-	s, err := NewSwt([]byte("password"))
-	if err != nil {
-		t.Fatal(err)
-	}
+	s := NewSwt([]byte("password"))
 	data_base := "test"
 	for i := 0; i < 10; i += 1 {
-		t.Run("test "+strconv.Itoa(i), func(t *testing.T) {
+		t.Run("test"+strconv.Itoa(i), func(t *testing.T) {
 			input := []byte(data_base + strconv.Itoa(i) + data_base)
 			token, _ := s.MakeToken(input)
 			fmt.Println("token:", token)
@@ -131,4 +124,17 @@ func TestParseData(t *testing.T) {
 			}
 		})
 	}
+}
+
+// Compare two slices
+func compare(lhs []byte, rhs []byte) bool {
+	if len(lhs) != len(rhs) {
+		return false
+	}
+	for i := range lhs {
+		if lhs[i] != rhs[i] {
+			return false
+		}
+	}
+	return true
 }
