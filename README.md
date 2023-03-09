@@ -12,8 +12,8 @@ I encountered some scenarios that required authentication. At first I used JWT, 
 
 Token structure
 ```
-|-- 256 bits --|--------|
-|- sinagature -|- data -|
+|-- 256 bit --|--------|
+|- signature -|- data -|
 ```
 Use [HMAC](https://pkg.go.dev/crypto/hmac)-[SHA256](https://pkg.go.dev/crypto/sha256) to digest and sign data.  
 Use [Base64](https://pkg.go.dev/encoding/base64) to encode Token. 
